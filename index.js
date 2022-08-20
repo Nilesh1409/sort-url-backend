@@ -1,7 +1,7 @@
 const express = require("express");
 const database = require("./database/index");
 const auth = require("./handler/auth");
-const urlRouter = require("./router/url");
+const {urlRouter,getShortUrl} = require("./router/url");
 const userRouter = require("./router/user");
 
 
@@ -16,6 +16,7 @@ app.use((req,res,next) =>{
 })
 
 app.use(userRouter);
+app.use(getShortUrl);
 app.use(auth,urlRouter);
 
 

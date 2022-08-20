@@ -5,7 +5,7 @@ const Register = require("../database/register");
 let SECRET = "kjkdsfdso898hedsf"
 
 // write auth middleware function and export it
-const auth = (req,res,next) => {
+async function auth(req,res,next) {
     let {token} = req.headers;
 
     if(!token) {
@@ -17,14 +17,18 @@ const auth = (req,res,next) => {
             res.status(401).send("invalid token");
             return;
         }
-        let userDetail = Register.findOne( decoded._id);
-        if(!userDetail) {
-            res.status(401).send("invalid token");
-            return;
+        try {
+            let userDetail = Register.findOne( decoded._id);
+            if(!userDetail) {
+                res.status(401).send("invalid token");
+                return;
+            }
+            req.context = {user: decoded};
+            next();
+        } catch (error) {
+            console.log(error);
         }
-        console.log("user",userDetail);
-        // req.body = userDetail;
-        next();
+      
     }
     )
 }

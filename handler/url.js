@@ -1,9 +1,21 @@
 const url = require("../database/urlsorter");
 const shortid = require('shortid');
+const Register = require("../database/register");
 
 async function registerUrl (req,res) {
-    // let {user} = req,body
-    // console.log("user",user);
+    let userId = req.context.user;
+    
+    if(!userId) {
+        res.status(400).send("user is not logged in");
+        return;
+    }
+    let user = await Register.findOne({_id: userId._id});
+    if(!user) {
+        res.status(400).send("user does not exist");
+        return;
+    }
+
+
     let {Url} = req.body;
     if(!Url) {
         res.status(400).send("url is required");
@@ -37,29 +49,7 @@ async function registerUrl (req,res) {
 
 }
 
-async function getUrl (req,res) {
-    let {shortUrl} = req.params;
-    if(!shortUrl) {
-        res.status(400).send("shortUrl is required");
-        return;
-    }
-    try {
-        let urlData = await url.findOne({shortUrl: shortUrl});
-
-        if(urlData.date.getDate() < new Date().getDate() - 2) {
-            await url.findByIdAndDelete(urlData._id);
-            urlData = null;
-            }
-
-        if(!urlData) {
-            res.status(400).send("url does not exist");
-            return;
-        }
-        res.status(200).send(urlData.url);
-    } catch (error) {
-        res.status(500).send(error);
-    }
-}
 
 
-module.exports = {registerUrl, getUrl};
+
+module.exports = {registerUrl};

@@ -1,9 +1,13 @@
 const express = require("express");
-const {registerUrl,getUrl} = require("../handler/url");
+const {registerUrl} = require("../handler/url");
+const {getUrl} = require("../handler/geturl");
 
 const urlRouter = express.Router();
 
 urlRouter.post("/url",registerUrl);
-urlRouter.get("/url/:shortUrl",getUrl);
 
-module.exports = urlRouter;
+const getShortUrl = express.Router();
+
+getShortUrl.get("/url/:shortUrl",getUrl);
+
+module.exports = {urlRouter,getShortUrl};
