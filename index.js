@@ -19,7 +19,7 @@ app.use((req,res,next) =>{
 
 app.use(userRouter);
 app.use(getShortUrl);
-app.use(auth,urlRouter);
+app.use(urlRouter);
 
 
 

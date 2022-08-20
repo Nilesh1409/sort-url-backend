@@ -2,6 +2,7 @@ const url = require("../database/urlsorter");
 
 async function getUrl (req,res) {
     console.log("in getUrl");
+    console.log(req.path);
     let {shortUrl} = req.params;
     if(!shortUrl) {
         res.status(400).send("shortUrl is required");
@@ -18,7 +19,8 @@ async function getUrl (req,res) {
             res.status(400).send("url does not exist");
             return;
         }
-        res.status(200).send(urlData.url);
+        console.log(urlData);
+       return res.status(200).send(urlData.oldurl);
     } catch (error) {
         res.status(500).send(error);
     }
