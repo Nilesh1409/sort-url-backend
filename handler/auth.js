@@ -6,7 +6,9 @@ let SECRET = "kjkdsfdso898hedsf"
 
 // write auth middleware function and export it
 async function auth(req,res,next) {
+    console.log("in auth");
     let {token} = req.headers;
+    console.log("token",token);
 
     if(!token) {
         res.status(401).send("token is required");

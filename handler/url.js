@@ -1,4 +1,4 @@
-const url = require("../database/urlsorter");
+const urldata = require("../database/urlsorter");
 const shortid = require('shortid');
 const Register = require("../database/register");
 
@@ -16,32 +16,39 @@ async function registerUrl (req,res) {
     }
 
 
-    let {Url} = req.body;
-    if(!Url) {
+    let {url} = req.body;
+    // console.log("url",Url);
+    if(!url) {
         res.status(400).send("url is required");
         return;
+
     }
+ 
     try {
-        let urlData = await url.findOne({url: Url});
-
+        let urlData = await urldata.findOne({oldurl: url});
+        
          // if url is date is 2 days old then delete it
-         if(urlData.date.getDate() < new Date().getDate() - 2) {
-            await url.findByIdAndDelete(urlData._id);
-            let newUrl = shortid.generate();
-
-            let shortUrl = await url.create({url: Url, shortUrl: newUrl});
-            res.status(200).send(shortUrl);
-            }
+         
 
 
         if(urlData) {
+            if(urlData.date.getDate() < new Date().getDate() - 2) {
+                await url.findByIdAndDelete(urlData._id);
+                let newUrl = shortid.generate();
+    
+                let shortUrl = await urldata.create({oldurl: url, shortUrl: newUrl});
+                res.status(200).send(shortUrl);
+                return;
+                }
+
             res.status(200).send(urlData);
             return;
         }
+        console.log(url)
 
         let newUrl = shortid.generate();
 
-        let shortUrl = await url.create({url: Url, shortUrl: newUrl});
+        let shortUrl = await urldata.create({oldurl: url, shortUrl: newUrl});
         res.status(200).send(shortUrl);
     } catch (error) {
         res.status(500).send(error);

@@ -3,14 +3,16 @@ const database = require("./database/index");
 const auth = require("./handler/auth");
 const {urlRouter,getShortUrl} = require("./router/url");
 const userRouter = require("./router/user");
-
+const cors = require("cors");
 
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 
 app.use((req,res,next) =>{
     console.log("request is made to: ",req.originalUrl);
+    console.log("request body",req.body);
     next();
 
 })

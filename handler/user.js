@@ -25,7 +25,6 @@ async function registerUser(req,res){
         res.status(400).send("email is not valid");
         return;
     }
-    console.log("test")
     if(!user.password.match(passwordCheck)) {
         res.status(400).send("password should be alphanumeric and at least 8 characters");
         return;
@@ -42,6 +41,7 @@ async function registerUser(req,res){
         }
 
         let userData = await Register.create(user);
+        console.log(userData)
         res.status(200).send(userData);
     } catch (error) {
         res.status(500).send(error);
